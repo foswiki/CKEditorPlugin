@@ -74,7 +74,7 @@ sub initPlugin {
 }
 
 sub _notAvailable {
-    for my $c qw(CKEPLUGIN_DISABLE NOWYSIWYG) {
+    for my $c (qw(CKEPLUGIN_DISABLE NOWYSIWYG)) {
         return
           "Disabled by * Set $c = " . Foswiki::Func::getPreferencesValue($c)
             if Foswiki::Func::getPreferencesFlag($c);
