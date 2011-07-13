@@ -75,9 +75,9 @@ sub initPlugin {
 
 sub _notAvailable {
     for my $c (qw(CKEPLUGIN_DISABLE NOWYSIWYG)) {
-        return
-          "Disabled by * Set $c = " . Foswiki::Func::getPreferencesValue($c)
-            if Foswiki::Func::getPreferencesFlag($c);
+        return "Disabled by * Set $c = "
+          . Foswiki::Func::getPreferencesValue($c)
+          if Foswiki::Func::getPreferencesFlag($c);
     }
 
     # Disable CKE if we are on a specialised edit skin
@@ -100,7 +100,7 @@ sub _notAvailable {
 
 sub beforeEditHandler {
 
-    my ($text, $topic, $web) = @_;
+    my ( $text, $topic, $web ) = @_;
 
     my $mess = _notAvailable();
     if ($mess) {
@@ -134,7 +134,7 @@ sub beforeEditHandler {
     elsif ( $browserInfo{isMSIE} ) {
         $extras = 'MSIE';
     }
-    if (!$extras) {
+    if ( !$extras ) {
         $extras =
           Foswiki::Func::getPreferencesValue( 'CKEPLUGIN_INIT_' . $extras )
           || $defaultINIT_BROWSER{$extras};
@@ -181,20 +181,24 @@ sub beforeEditHandler {
 '<script type="text/javascript" src="%PUBURLPATH%/%SYSTEMWEB%/BehaviourContrib/behaviour.js"></script>'
         );
     }
-    # URL-encode the version number to include in the .js URLs, so that the browser re-fetches the .js
-    # when this plugin is upgraded.
+
+# URL-encode the version number to include in the .js URLs, so that the browser re-fetches the .js
+# when this plugin is upgraded.
     my $encodedVersion = $VERSION;
-    # SMELL: This regex (and the one applied to $metainit, above) duplicates Foswiki::urlEncode(),
-    #        but Foswiki::Func.pm does not expose that function, so plugins may not use it
-    $encodedVersion =~ s/([^0-9a-zA-Z-_.:~!*'\/%])/'%'.sprintf('%02x',ord($1))/ge;
+
+# SMELL: This regex (and the one applied to $metainit, above) duplicates Foswiki::urlEncode(),
+#        but Foswiki::Func.pm does not expose that function, so plugins may not use it
+    $encodedVersion =~
+      s/([^0-9a-zA-Z-_.:~!*'\/%])/'%'.sprintf('%02x',ord($1))/ge;
+
     #Alex: Hier war der addToHead abschnitt - ggf. wieder zurück schreiben
     #my $zufall = time();
-    
-   	Foswiki::Func::addToZone('head', 'tiny', <<"META" );
+
+    Foswiki::Func::addToZone( 'head', 'tiny', <<"META" );
 	<meta name="CKEPLUGIN_INIT" content="$metainit" />
 META
-    
-    Foswiki::Func::addToZone('script', 'tiny', <<"SCRIPT" );
+
+    Foswiki::Func::addToZone( 'script', 'tiny', <<"SCRIPT" );
 <script language="javascript" type="text/javascript" src="%PUBURLPATH%/%SYSTEMWEB%/CKEditorPlugin/ckeditor/ckeditor.js"></script>
 <script language="javascript" type="text/javascript" src="%PUBURLPATH%/%SYSTEMWEB%/CKEditorPlugin/ckeditor/_source/core/ajax.js"></script>
 <script language="javascript" type="text/javascript" src="%PUBURLPATH%/%SYSTEMWEB%/CKEditorPlugin/ckeditor/foswiki_cke.js"></script>
@@ -202,7 +206,7 @@ META
 <link rel="stylesheet" href="%PUBURLPATH%/%SYSTEMWEB%/CKEditorPlugin/ckeditor/plugins/autosuggest/css/autosuggest_inquisitor.css" type="text/css" media="screen" charset="utf-8" />
 SCRIPT
 
-	Foswiki::Func::addToZone('ckscript', 'tiny', <<"SCRIPT" );
+    Foswiki::Func::addToZone( 'ckscript', 'tiny', <<"SCRIPT" );
 <script language="javascript" type="text/javascript" src="%PUBURLPATH%/%SYSTEMWEB%/CKEditorPlugin/ckeditor/foswiki.js"></script>
 SCRIPT
 
